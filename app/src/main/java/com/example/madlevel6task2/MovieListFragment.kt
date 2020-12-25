@@ -5,11 +5,20 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
+import kotlinx.android.synthetic.main.fragment_movie_list.*
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
 class MovieListFragment : Fragment() {
+
+    private val movies = arrayListOf<Movie>()
+    private val viewModel: MovieViewModel by viewModels()
+    private lateinit var movieAdapter: MovieAdapter
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -21,5 +30,27 @@ class MovieListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        movieAdapter = MovieAdapter(movies, this::onMovieClick)
+        rvMovies.layoutManager = GridLayoutManager(activity, 2, GridLayoutManager.VERTICAL, false)
+        rvMovies.adapter = movieAdapter
+
+        btSubmit.setOnClickListener{
+            viewModel.getMovies(etYear.text.toString().toInt())
+        }
+        observeMovies()
+    }
+
+    private fun onMovieClick(movie: Movie){
+        viewModel.setMovie(movie)
+        findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
+    }
+
+    private fun observeMovies() {
+        viewModel.movies.observe(viewLifecycleOwner, Observer {
+            movies.clear()
+            movies.addAll(it)
+            movieAdapter.notifyDataSetChanged()
+        })
     }
 }

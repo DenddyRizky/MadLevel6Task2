@@ -5,12 +5,12 @@ import com.google.gson.annotations.SerializedName
 data class Movie(
     @SerializedName("title") var title: String,
     @SerializedName("release_date") var releaseDate: String,
-    @SerializedName("rating") var rating: Double,
-    @SerializedName("banner") var banner: String,
-    @SerializedName("poster") var poster: String,
-    @SerializedName("text") var text: String
+    @SerializedName("vote_average") var voteAverage: Double,
+    @SerializedName("backdrop_path") var backdropPath: String,
+    @SerializedName("poster_path") var posterPath: String,
+    @SerializedName("overview") var overview: String
 ) {
-    fun getBannerUrl() = "https://image.tmdb.org/t/p/w500/$banner"
+    fun getBannerUrl() = "https://image.tmdb.org/t/p/w500/$backdropPath"
 
-    fun getPosterUrl() = "https://image.tmdb.org/t/p/w500/$poster"
+    fun getPosterUrl() = "https://image.tmdb.org/t/p/w500/$posterPath"
 }
