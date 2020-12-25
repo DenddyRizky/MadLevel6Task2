@@ -11,8 +11,11 @@ import kotlinx.coroutines.launch
 class MovieViewModel(application: Application) : AndroidViewModel(application) {
 
     private val movieRepository = MovieRepository()
-    val selectedMovie: MutableLiveData<Movie> = MutableLiveData()
+    private var _selectedMovie: MutableLiveData<Movie> = MutableLiveData()
     val movies = movieRepository.movies
+
+    val selectedMovie: LiveData<Movie>
+        get() = _selectedMovie
 
     private val _errorText: MutableLiveData<String> = MutableLiveData()
     val errorText: LiveData<String>
@@ -30,8 +33,7 @@ class MovieViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun setMovie(movie: Movie){
-        viewModelScope.launch {
-            selectedMovie.value = movie
-        }
+        _selectedMovie.value = movie
+        Log.d("MOVIEE", _selectedMovie.value.toString())
     }
 }

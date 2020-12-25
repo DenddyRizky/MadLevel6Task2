@@ -1,15 +1,23 @@
 package com.example.madlevel6task2
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+import com.bumptech.glide.Glide
+import kotlinx.android.synthetic.main.fragment_movie_detail.*
 
 /**
  * A simple [Fragment] subclass as the second destination in the navigation.
  */
 class MovieDetailFragment : Fragment() {
+
+    private val viewModel: MovieViewModel by viewModels()
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -21,5 +29,16 @@ class MovieDetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Log.d("MOVIEE", "GO")
+        showMovie()
+    }
+
+    private fun showMovie() {
+        viewModel.selectedMovie.observe(viewLifecycleOwner, Observer {
+            Log.d("MOVIEE", viewModel.selectedMovie.value.toString())
+            Glide.with(requireContext()).load(it.getBannerUrl()).into(ivBanner)
+            Glide.with(requireContext()).load(it.getPosterUrl()).into(ivPoster)
+            tvDate.text = it.releaseDate
+        })
     }
 }
