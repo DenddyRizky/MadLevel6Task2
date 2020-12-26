@@ -17,7 +17,7 @@ import kotlinx.android.synthetic.main.fragment_movie_detail.*
  */
 class MovieDetailFragment : Fragment() {
 
-    private val viewModel: MovieViewModel by viewModels()
+    private val viewModel: MovieViewModel by activityViewModels()
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -29,16 +29,17 @@ class MovieDetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d("MOVIEE", "GO")
         showMovie()
     }
 
     private fun showMovie() {
-        viewModel.selectedMovie.observe(viewLifecycleOwner, Observer {
-            Log.d("MOVIEE", viewModel.selectedMovie.value.toString())
+        viewModel.selectedMovie.observe(viewLifecycleOwner, {
             Glide.with(requireContext()).load(it.getBannerUrl()).into(ivBanner)
             Glide.with(requireContext()).load(it.getPosterUrl()).into(ivPoster)
             tvDate.text = it.releaseDate
+            tvTitle.text = it.title
+            tvRating.text = it.voteAverage.toString()
+            tvOverview.text = it.overview
         })
     }
 }

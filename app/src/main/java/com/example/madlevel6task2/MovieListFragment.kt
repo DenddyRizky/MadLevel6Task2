@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -18,8 +19,8 @@ import kotlinx.android.synthetic.main.fragment_movie_list.*
 class MovieListFragment : Fragment() {
 
     private val movies = arrayListOf<Movie>()
-    private val viewModel: MovieViewModel by viewModels()
-    private lateinit var movieAdapter: MovieAdapter
+    private val viewModel: MovieViewModel by activityViewModels()
+    private val movieAdapter = MovieAdapter(movies, ::onMovieClick)
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -31,10 +32,10 @@ class MovieListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        movieAdapter = MovieAdapter(movies, this::onMovieClick)
-        rvMovies.layoutManager = GridLayoutManager(activity, 2, GridLayoutManager.VERTICAL, false)
         rvMovies.adapter = movieAdapter
+
+        //movieAdapter = MovieAdapter(movies, this::onMovieClick)
+        rvMovies.layoutManager = GridLayoutManager(activity, 2, GridLayoutManager.VERTICAL, false)
 
         btSubmit.setOnClickListener{
             viewModel.getMovies(etYear.text.toString().toInt())

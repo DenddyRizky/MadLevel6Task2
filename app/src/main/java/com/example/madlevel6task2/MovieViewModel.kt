@@ -11,11 +11,10 @@ import kotlinx.coroutines.launch
 class MovieViewModel(application: Application) : AndroidViewModel(application) {
 
     private val movieRepository = MovieRepository()
-    private var _selectedMovie: MutableLiveData<Movie> = MutableLiveData()
+    private val _selectedMovie: MutableLiveData<Movie> = MutableLiveData()
     val movies = movieRepository.movies
 
-    val selectedMovie: LiveData<Movie>
-        get() = _selectedMovie
+    val selectedMovie = _selectedMovie
 
     private val _errorText: MutableLiveData<String> = MutableLiveData()
     val errorText: LiveData<String>
@@ -33,7 +32,12 @@ class MovieViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun setMovie(movie: Movie){
-        _selectedMovie.value = movie
-        Log.d("MOVIEE", _selectedMovie.value.toString())
+        viewModelScope.launch {
+            try {
+                _selectedMovie.value = movie
+            } catch (error: Throwable){
+                Log.e("Movie Save Error", "Huidige movie kan niet worden opgeslagen")
+            }
+        }
     }
 }
